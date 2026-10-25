@@ -82,7 +82,7 @@ const slotLink = 'https://drive.google.com/drive/folders/15keA9VNWiBUBXxlLiNAuUq
 const dayNames = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
 const monthNames = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
 function CalendarAndQuickLinks() {
-  const [cursor, setCursor] = useState(() => new Date(2026, 0, 1));
+  const [cursor, setCursor] = useState(() => { const now = new Date(); return new Date(now.getFullYear(), now.getMonth(), 1); });
   const today = new Date(); const todayKey = `${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`;
   const year = cursor.getFullYear(); const month = cursor.getMonth();
   const firstDay = new Date(year, month, 1).getDay();
