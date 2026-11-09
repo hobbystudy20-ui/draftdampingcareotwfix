@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import {
-  ArrowDown, ArrowRight, Baby, Bell, BookOpen, Calendar, Check, ChevronDown, ChevronLeft, FileText, LayoutGrid,
+  ArrowDown, ArrowRight, Baby, Bell, BookOpen, Calendar, Check, ChevronDown, ChevronLeft, FileText, Instagram, LayoutGrid, MessageCircle,
   ChevronRight, CircleHelp, Clock3, Gift, HeartHandshake, Home, Info, MapPin, Menu,
-  MessageCircle, Navigation, Phone, Plus, Search, Send, ShieldCheck, ShoppingBag, Sparkles,
+  Navigation, Phone, Plus, Search, Send, ShieldCheck, ShoppingBag, Sparkles,
   Stethoscope, Ticket, Truck, UserRound, Users, X, type LucideIcon,
 } from 'lucide-react';
 import { commonTerms, faqs, guideTerms, hygieneServices, services, type IconName, type Service } from '@/data/services';
@@ -168,7 +168,47 @@ function PersonalPage({ onAdd, onCombo }: { onAdd: (service: Service, subservice
 function ComboPage({ onAdd }: { onAdd: (drafts: AddDraft[]) => void }) { return <section className="page-screen"><div className="page-width"><div className="page-title-row page-title-simple"><div><span className="section-kicker">Atur pesananmu</span><h1>Paket Kombinasi</h1><p>Pilih beberapa sublayanan Personal Care & Hygiene. Total di bawah adalah penjumlahan harga satuan.</p></div></div><ComboBuilder onAdd={onAdd} /></div></section>; }
 function CrewPage({ onContact }: { onContact: () => void }) { return <section className="page-screen crew-screen"><div className="page-width"><div className="page-title-row page-title-simple"><div><span className="section-kicker">Tim Dampingcare</span><h1>Ketersediaan crew<br /><em>dikonfirmasi admin.</em></h1><p>Setiap permintaan akan dicocokkan dengan jenis layanan, lokasi, jadwal, kebutuhan, dan ketersediaan tim pada saat pemesanan.</p></div></div><div className="crew-grid"><div className="crew-card crew-card-main"><Users size={24} /><h2>Bagaimana cara cek crew?</h2><p>Sampaikan layanan yang dipilih, tanggal, waktu mulai, durasi bila relevan, serta lokasi melalui keranjang pesanan atau WhatsApp admin.</p><button className="primary-button" onClick={onContact}>Hubungi admin <MessageCircle size={16} /></button></div><div className="crew-card"><MapPin size={21} /><h3>Area dengan crew</h3><ul className="area-list"><li>Solo / Surakarta</li><li>Karanganyar</li><li>Sukoharjo</li><li>Boyolali</li><li>Sragen</li><li>Klaten</li><li>Yogyakarta / DIY</li></ul><small className="area-note">Ketersediaan crew tetap dikonfirmasi admin sesuai jadwal dan layanan.</small></div><div className="crew-card"><Clock3 size={21} /><h3>Jadwal dan durasi</h3><p>Durasi mengikuti jenis layanan, kebutuhan, kesepakatan, dan ketersediaan tim. Tidak semua layanan selalu tersedia di setiap kota.</p></div><div className="crew-card"><ShieldCheck size={21} /><h3>Batas layanan</h3><p>Dampingcare menyediakan pendampingan dan bantuan non-medis. Layanan rumah sakit mengikuti aturan fasilitas kesehatan setempat.</p></div></div><div className="crew-note"><Info size={18} /><span>Untuk keadaan darurat, segera hubungi layanan darurat atau tenaga kesehatan yang berwenang, bukan menunggu balasan admin.</span></div></div></section>; }
 function GuidePage() { return <section className="page-screen"><div className="page-width"><div className="page-title-row page-title-simple"><div><span className="section-kicker">Bantuan sebelum memesan</span><h1>Panduan, cara order,<br /><em>dan FAQ.</em></h1><p>Pelajari alur pemesanan dan istilah layanan Dampingcare.</p></div></div><HowToOrder /><GuideTerms /><Reviews /><Faq /></div></section>; }
-function ContactPage() { return <section className="page-screen"><div className="page-width"><div className="page-title-row page-title-simple"><div><span className="section-kicker">Kontak admin</span><h1>Mulai dari cerita<br /><em>kebutuhanmu.</em></h1><p>Sampaikan layanan, waktu, lokasi, dan kebutuhan singkat. Admin akan membantu mengecek ketersediaan serta estimasi biaya.</p></div></div><Contact go={() => window.scrollTo({ top: 0, behavior: 'smooth' })} /><div className="contact-details"><div><Phone size={19} /><strong>WhatsApp Admin</strong><span>0896 7287 4600</span></div><div><MapPin size={19} /><strong>Area utama</strong><span>Solo Raya dan Yogyakarta/DIY</span></div><div><ShieldCheck size={19} /><strong>Konfirmasi</strong><span>Ketersediaan crew dan biaya dikonfirmasi admin</span></div></div></div></section>; }
+function ContactPage() { return <section className="page-screen"><div className="page-width"><div className="page-title-row page-title-simple"><div><span className="section-kicker">Kontak admin</span><h1>Mulai dari cerita<br /><em>kebutuhanmu.</em></h1><p>Sampaikan layanan, waktu, lokasi, dan kebutuhan singkat. Admin akan membantu mengecek ketersediaan serta estimasi biaya.</p></div></div><Contact go={() => window.scrollTo({ top: 0, behavior: 'smooth' })} /><SocialMediaSection /><div className="contact-details"><div><Phone size={19} /><strong>WhatsApp Admin</strong><span>0896 7287 4600</span></div><div><MapPin size={19} /><strong>Area utama</strong><span>Solo Raya dan Yogyakarta/DIY</span></div><div><ShieldCheck size={19} /><strong>Konfirmasi</strong><span>Ketersediaan crew dan biaya dikonfirmasi admin</span></div></div></div></section>; }
+
+const socialAccounts = [
+  { area: 'Solo', handle: 'dampingcare.solo' },
+  { area: 'Sukoharjo', handle: 'dampingcare.sukoharjo' },
+  { area: 'Karanganyar', handle: 'dampingcare.karanganyar' },
+  { area: 'Boyolali', handle: 'dampingcare.boyolali' },
+  { area: 'Sragen', handle: 'dampingcaresragen' },
+  { area: 'Klaten', handle: 'dampingcare.klaten' },
+  { area: 'Jogja', handle: 'dampingcare.jogja' },
+];
+const platforms = [
+  { name: 'Instagram', href: (h: string) => `https://instagram.com/${h}`, label: 'Instagram' },
+  { name: 'Threads', href: (h: string) => `https://threads.net/@${h}`, label: 'Threads' },
+  { name: 'TikTok', href: (h: string) => `https://tiktok.com/@${h}`, label: 'TikTok' },
+];
+function SocialMediaSection() {
+  return <div className="social-media-section">
+    <div className="social-head">
+      <span className="section-kicker">Kontak &amp; Sosmed</span>
+      <h2>Ikuti sosial media Dampingcare</h2>
+      <p>Pilih akun sosial media sesuai wilayah. Tap ikon untuk langsung membuka Instagram, Threads, atau TikTok.</p>
+    </div>
+    <div className="social-grid">
+      {socialAccounts.map((account) => (
+        <div className="social-card" key={account.area}>
+          <div className="social-area"><MapPin size={16} />{account.area}</div>
+          <div className="social-handle">@{account.handle}</div>
+          <div className="social-links">
+            {platforms.map((platform) => (
+              <a key={platform.name} href={platform.href(account.handle)} target="_blank" rel="noopener noreferrer" className="social-link">
+                {platform.name === 'Instagram' ? <Instagram size={16} /> : platform.name === 'Threads' ? <span className="threads-glyph" aria-hidden="true">@</span> : <span className="tiktok-glyph" aria-hidden="true">TT</span>}
+                <span>{platform.label}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>;
+}
 function SectionHeading({ eyebrow, title, text }: { eyebrow: string; title: string; text: string }) { return <div className="section-heading"><span className="section-kicker">{eyebrow}</span><h2>{title}</h2><p>{text}</p></div>; }
 function CatalogToolbar({ search, setSearch, category, setCategory, sort, setSort }: { search: string; setSearch: (value: string) => void; category: string; setCategory: (value: string) => void; sort: string; setSort: (value: string) => void }) { return <div className="catalog-toolbar"><label className="search-input"><Search size={17} /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Cari layanan..." /></label><div className="toolbar-scroll">{catalogCategories.map((item) => <button className={category === item ? 'active' : ''} onClick={() => setCategory(item)} key={item}>{item}</button>)}</div><select value={sort} onChange={(event) => setSort(event.target.value)} aria-label="Urutkan layanan"><option>Urutan awal</option><option>Harga termurah</option><option>A sampai Z</option></select></div>; }
 function ServiceCard({ service, onDetail, onAdd }: { service: Service; onDetail: (service: Service) => void; onAdd: (draft: AddDraft) => void }) { const Icon = iconMap[service.icon]; return <article className="shop-card"><div className="shop-card-top"><div className="card-icon"><Icon size={19} /></div><span className="card-number">{String(service.id).padStart(2, '0')}</span></div><span className="card-tag">{service.category}</span><h3>{service.name}</h3><p>{service.short}</p><div className="card-price">{service.priceFrom ? `Mulai ${formatPrice(service.priceFrom)}` : 'Hubungi admin untuk harga'}</div><div className="card-actions"><button className="detail-link" onClick={() => onDetail(service)}>Lihat detail</button><button className="add-button" onClick={() => onAdd({ service, duration: '', subservice: '', clientType: 'Pasien', note: '' })}><Plus size={15} /> Tambah</button></div></article>; }
