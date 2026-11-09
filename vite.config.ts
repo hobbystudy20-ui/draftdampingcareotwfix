@@ -8,7 +8,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['cropped_circle_image_(1).webp', 'IMG_20260918_063548_262AAA.png'],
+      includeAssets: ['cropped_circle_image_(1).png', 'cropped_circle_image_(1).webp', 'IMG_20260918_063548_262AAA.png'],
       manifest: {
         name: 'Dampingcare',
         short_name: 'Dampingcare',
@@ -21,12 +21,13 @@ export default defineConfig({
         scope: '/',
         lang: 'id',
         icons: [
-          { src: '/cropped_circle_image_(1).webp', sizes: '192x192', type: 'image/webp', purpose: 'any maskable' },
-          { src: '/cropped_circle_image_(1).webp', sizes: '512x512', type: 'image/webp', purpose: 'any maskable' },
+          { src: '/cropped_circle_image_(1).png', sizes: '192x192', type: 'image/png', purpose: 'any' },
+          { src: '/cropped_circle_image_(1).png', sizes: '512x512', type: 'image/png', purpose: 'any' },
         ],
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,webp,png,svg,ico}'],
+        maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
       },
     }),
   ],
