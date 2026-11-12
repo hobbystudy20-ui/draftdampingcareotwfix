@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
-import { ArrowLeft, Check, Clipboard, Copy, MessageCircle, Send, ShieldCheck, ShoppingBag, Trash2, X } from 'lucide-react';
+import { ArrowLeft, Check, Clipboard, Copy, MessageCircle, QrCode, Send, ShieldCheck, ShoppingBag, Trash2, X } from 'lucide-react';
 import { ADMIN_URL, areas, bookingTypeLabels, buildMessage, categoryText, dayLabel, emptyBooking, isCareBooking, routesToGroup, todayInJakarta, validateBooking, type BookingData, type BookingType, type CartItem } from '@/booking/bookingModel';
 import { Fieldset, OrdererFields, type DestinationFormProps, type FormProps } from '@/booking/FormFields';
 import { PatientForm } from '@/booking/PatientForm';
@@ -7,12 +7,14 @@ import { CareForm } from '@/booking/CareForm';
 import { HygieneForm } from '@/booking/HygieneForm';
 import { JastipAnjemForm } from '@/booking/JastipAnjemForm';
 import { OtherForm } from '@/booking/OtherForm';
+import { PaymentQrisModal } from '@/PaymentQrisModal';
 
 export function BookingFlow({ cart, subtotal, updateQty, removeItem, clearCart, onClose, onSent }: { cart: CartItem[]; subtotal: number; updateQty: (key: string, amount: number) => void; removeItem: (key: string) => void; clearCart: () => void; onClose: () => void; onSent: (url: string) => void }) {
   const [stage, setStage] = useState<'cart' | 'form' | 'review' | 'sudden'>('cart');
   const [data, setData] = useState<BookingData>(() => { try { return { ...emptyBooking, ...(JSON.parse(localStorage.getItem('dampingcare-booking') || '{}') as Partial<BookingData>) }; } catch { return emptyBooking; } });
   const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
+  const [qrisOpen, setQrisOpen] = useState(false);
   useEffect(() => { localStorage.setItem('dampingcare-booking', JSON.stringify(data)); }, [data]);
   const update = (key: keyof BookingData, value: string) => setData((current) => ({ ...current, [key]: value }));
   const today = todayInJakarta();
@@ -50,7 +52,7 @@ export function BookingFlow({ cart, subtotal, updateQty, removeItem, clearCart, 
 
   return <div className="drawer-backdrop" onMouseDown={(event) => event.target === event.currentTarget && onClose()}><aside className="booking-drawer">
     <div className="drawer-head"><div><span className="section-kicker">Pesanan Dampingcare</span><h2>{stage === 'cart' ? 'Keranjang' : stage === 'form' ? 'Formulir booking' : stage === 'review' ? 'Periksa kembali' : 'Pengajuan siap dikirim'}</h2></div><button onClick={onClose} aria-label="Tutup pesanan"><X /></button></div>
-    {stage === 'cart' && <CartStage cart={cart} subtotal={subtotal} updateQty={updateQty} removeItem={removeItem} clearCart={clearCart} onStart={() => setStage('form')} />}
+    {stage === 'cart' && <CartStage cart={cart} subtotal={subtotal} updateQty={updateQty} removeItem={removeItem} clearCart={clearCart} onStart={() => setStage('form')} onPay={() => setQrisOpen(true)} />}
     {stage === 'form' && <form className="booking-form" onSubmit={submitForm}>
       <button type="button" className="booking-back" onClick={() => setStage('cart')}><ArrowLeft size={15} /> Kembali ke keranjang</button>
       <p className="booking-notice"><ShieldCheck size={16} /> Ini adalah pengajuan permintaan, bukan pembayaran dan belum menjadi booking terkonfirmasi.</p>
@@ -68,13 +70,13 @@ export function BookingFlow({ cart, subtotal, updateQty, removeItem, clearCart, 
     </form>}
     {stage === 'review' && <ReviewStage data={data} cart={cart} message={message} typeLabel={typeLabel} onBack={() => setStage('form')} onSubmit={() => { if (routesToGroup(data)) setStage('sudden'); else openWhatsApp(); }} onCopy={copySummary} copied={copied} />}
     {stage === 'sudden' && <SuddenStage data={data} message={message} onCopy={copySummary} copied={copied} onClose={onClose} />}
-  </aside></div>;
+  </aside>{qrisOpen && <PaymentQrisModal onClose={() => setQrisOpen(false)} />}</div>;
 }
 
-function CartStage({ cart, subtotal, updateQty, removeItem, clearCart, onStart }: { cart: CartItem[]; subtotal: number; updateQty: (key: string, amount: number) => void; removeItem: (key: string) => void; clearCart: () => void; onStart: () => void }) {
+function CartStage({ cart, subtotal, updateQty, removeItem, clearCart, onStart, onPay }: { cart: CartItem[]; subtotal: number; updateQty: (key: string, amount: number) => void; removeItem: (key: string) => void; clearCart: () => void; onStart: () => void; onPay: () => void }) {
   return <div className="booking-cart-stage">
     <div className="cart-items">{cart.length ? cart.map((item) => <div className="cart-item" key={item.key}><div><strong>{item.name}</strong><small>{item.options}</small>{item.note && <small>Catatan: {item.note}</small>}<div className="quantity"><button onClick={() => updateQty(item.key, -1)}>-</button><span>{item.quantity}</span><button onClick={() => updateQty(item.key, 1)}>+</button></div></div><div className="item-price"><b>{item.price === null ? 'Admin' : `Rp${(item.price * item.quantity).toLocaleString('id-ID')}`}</b><button onClick={() => removeItem(item.key)} aria-label="Hapus item"><Trash2 size={14} /></button></div></div>) : <div className="empty-cart"><ShoppingBag size={29} /><strong>Keranjang masih kosong</strong><span>Pilih layanan dari katalog untuk mulai memesan, atau lanjut untuk layanan tanpa keranjang.</span></div>}</div>
-    {cart.length > 0 && <><button className="clear-cart" onClick={clearCart}>Kosongkan keranjang</button><div className="subtotal"><span>Estimasi subtotal jasa<small>Belum termasuk transportasi</small></span><strong>Rp{subtotal.toLocaleString('id-ID')}</strong></div></>}
+    {cart.length > 0 && <><button className="clear-cart" onClick={clearCart}>Kosongkan keranjang</button><div className="subtotal"><span>Estimasi subtotal jasa<small>Belum termasuk transportasi</small></span><strong>Rp{subtotal.toLocaleString('id-ID')}</strong></div><button className="quiet-button full-width" onClick={onPay}><QrCode size={15} /> Bayar dengan QRIS</button></>}
     <button className="primary-button full-width" onClick={onStart}>Lanjutkan ke formulir booking <Send size={15} /></button>
     <p className="send-note">Tarif, jadwal, dan ketersediaan crew dikonfirmasi oleh Admin Dampingcare.</p>
   </div>;
