@@ -16,7 +16,7 @@ const whatsappNumber = '6289672874600';
 const iconMap: Record<IconName, LucideIcon> = { stethoscope: Stethoscope, shield: ShieldCheck, navigation: Navigation, search: Search, heart: HeartHandshake, clock: Clock3, users: Users, baby: Baby, user: UserRound, home: Home, bell: Bell, truck: Truck, message: MessageCircle, info: Info };
 const durations = ['4 jam', '12 jam', '1×24 jam', 'Beberapa hari', '1 minggu', 'Lainnya, sesuai kesepakatan'];
 const catalogCategories = ['Semua', 'Pendampingan Pasien', 'Pendampingan Bayi/Anak/Lansia', 'Personal Care & Hygiene', 'JASTIP & ANJEM', 'Layanan Lainnya'];
-const ucapanTeks = '𝗛𝗮𝗽𝗽𝘆 𝗯𝗶𝗿𝘁𝗵𝗱𝗮𝘆 𝗵+𝟭, 𝗟𝘂𝘁𝗵𝗳𝗶 𝗔𝗹𝗶𝗻! 😍Sehat-sehat selalu & semoga senantiasa diberikan kelancaran dalam menempuh koas. Terima kasih banyak atas segala support-nya selama ini, yaa. Sampai akhirnya web ini bisa terwujud 🥺❤️';
+const ucapanTeks = 'Terima kasih telah menggunakan layanan Dampingcare! ^^💗 Untuk menghubungi tim secara langsung, silakan menuju grup WhatsApp sesuai kota masing-masing tanpa perlu menunggu Admin Utama. Konfirmasi dan pembayaran tetap melalui Admin Utama dengan QRIS resmi Dampingcare. With love, Founder of Dampingcare ♡';
 function matchesCatalogCategory(service: Service, category: string): boolean {
   if (category === 'Semua') return true;
   if (category === 'Pendampingan Pasien') return service.category === 'Pendampingan Rumah Sakit' || service.category === 'Pendampingan Pasien dan Keluarga';
